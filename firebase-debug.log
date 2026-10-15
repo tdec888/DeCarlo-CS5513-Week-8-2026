@@ -1,0 +1,43 @@
+[debug] [2026-10-15T02:51:42.637Z] ----------------------------------------------------------------------
+[debug] [2026-10-15T02:51:42.640Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\Blue Dot\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js --project DeCarlo-CS5513-Week8-2026v2
+[debug] [2026-10-15T02:51:42.640Z] CLI Version:   15.33.0
+[debug] [2026-10-15T02:51:42.640Z] Platform:      win32
+[debug] [2026-10-15T02:51:42.640Z] Node Version:  v26.7.0
+[debug] [2026-10-15T02:51:42.640Z] Detected Agent: unknown
+[debug] [2026-10-15T02:51:42.640Z] Time:          Wed Oct 14 2026 19:51:42 GMT-0700 (Pacific Daylight Time)
+[debug] [2026-10-15T02:51:42.640Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2026-10-15T02:51:42.643Z] TypeError: Cannot read properties of undefined (reading '0')
+    at Command.<anonymous> (C:\Users\Blue Dot\AppData\Roaming\npm\node_modules\firebase-tools\lib\index.js:78:21)
+    at Command.listener [as _actionHandler] (C:\Users\Blue Dot\AppData\Roaming\npm\node_modules\firebase-tools\node_modules\commander\index.js:413:31)
+    at Command._parseCommand (C:\Users\Blue Dot\AppData\Roaming\npm\node_modules\firebase-tools\node_modules\commander\index.js:914:14)
+    at Command.parse (C:\Users\Blue Dot\AppData\Roaming\npm\node_modules\firebase-tools\node_modules\commander\index.js:717:10)
+    at cli (C:\Users\Blue Dot\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\cli.js:138:26)
+    at Object.<anonymous> (C:\Users\Blue Dot\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js:27:5)
+    at Module._compile (node:internal/modules/cjs/loader:1934:14)
+    at Object..js (node:internal/modules/cjs/loader:2074:10)
+    at Module.load (node:internal/modules/cjs/loader:1656:32)
+    at Module._load (node:internal/modules/cjs/loader:1448:12)
+[error] 
+[error] Error: An unexpected error has occurred.
+[debug] [2026-10-15T02:51:55.518Z] ----------------------------------------------------------------------
+[debug] [2026-10-15T02:51:55.522Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\Blue Dot\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js --project DeCarlo-CS5513-Week8-2026v2
+[debug] [2026-10-15T02:51:55.522Z] CLI Version:   15.33.0
+[debug] [2026-10-15T02:51:55.522Z] Platform:      win32
+[debug] [2026-10-15T02:51:55.522Z] Node Version:  v26.7.0
+[debug] [2026-10-15T02:51:55.523Z] Detected Agent: unknown
+[debug] [2026-10-15T02:51:55.523Z] Time:          Wed Oct 14 2026 19:51:55 GMT-0700 (Pacific Daylight Time)
+[debug] [2026-10-15T02:51:55.523Z] ----------------------------------------------------------------------
+[debug] fir-15T02:51:55.524Z] TypeError: Cannot read properties of undefined (reading '0')
+    at Command.<anonymous> (C:\Users\Blue Dot\AppData\Roaming\npm\node_modules\firebase-tools\lib\index.js:78:21)
+    at Command.listener [as _actionHandler] (C:\Users\Blue Dot\AppData\Roaming\npm\node_modules\firebase-tools\node_modules\commander\index.js:413:31)
+    at Command._parseCommand (C:\Users\Blue Dot\AppData\Roaming\npm\node_modules\firebase-tools\node_modules\commander\index.js:914:14)
+    at Command.parse (C:\Users\Blue Dot\AppData\Roaming\npm\node_modules\firebase-tools\node_modules\commander\index.js:717:10)
+    at cli (C:\Users\Blue Dot\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\cli.js:138:26)
+    at Object.<anonymous> (C:\Users\Blue Dot\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js:27:5)
+    at Module._compile (node:internal/modules/cjs/loader:1934:14)
+    at Object..js (node:internal/modules/cjs/loader:2074:10)
+    at Module.load (node:internal/modules/cjs/loader:1656:32)
+    at Module._load (node:internal/modules/cjs/loader:1448:12)
+[error] 
+[error] Error: An unexpected error has occurred.
