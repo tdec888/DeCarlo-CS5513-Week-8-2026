@@ -1,6 +1,6 @@
 "use client";
 
-// This components handles the review dialog and uses a next.js feature known as Server Actions to handle the form submission
+// This client component manages the review dialog and submits through a Next.js Server Action.
 
 import { useEffect, useLayoutEffect, useRef } from "react";
 import RatingPicker from "@/src/components/RatingPicker.jsx";
@@ -16,7 +16,7 @@ const ReviewDialog = ({
 }) => {
   const dialog = useRef();
 
-  // dialogs only render their backdrop when called with `showModal`
+  // Use the native modal API so the dialog backdrop and modal behavior are enabled.
   useLayoutEffect(() => {
     if (isOpen) {
       dialog.current.showModal();
@@ -25,8 +25,8 @@ const ReviewDialog = ({
     }
   }, [isOpen, dialog]);
 
+  // A click targeting the dialog itself (rather than its contents) means the backdrop was clicked.
   const handleClick = (e) => {
-    // close if clicked outside the modal
     if (e.target === dialog.current) {
       handleClose();
     }

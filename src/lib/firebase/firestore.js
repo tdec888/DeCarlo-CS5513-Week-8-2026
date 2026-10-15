@@ -18,7 +18,7 @@ import {
 
 import { db } from "@/src/lib/firebase/clientApp";
 
-// Update the restaurant document with the public URL of its uploaded image.
+// Store the uploaded image URL on its restaurant document.
 export async function updateRestaurantImageReference(
   restaurantId,
   publicImageUrl
@@ -35,6 +35,7 @@ const updateWithRating = async (
   newRatingDocument,
   review
 ) => {
+  // Read and update the aggregate fields within the same transaction as the review write.
   const restaurant = await transaction.get(docRef);
   const data = restaurant.data();
   const newNumRatings = data?.numRatings ? data.numRatings + 1 : 1;
@@ -54,6 +55,7 @@ const updateWithRating = async (
 };
 
 export async function addReviewToRestaurant(db, restaurantId, review) {
+  // Validate required inputs before constructing Firestore document references.
   if (!restaurantId) {
     throw new Error("No restaurant ID has been provided.");
   }
@@ -68,7 +70,7 @@ export async function addReviewToRestaurant(db, restaurantId, review) {
       collection(db, `restaurants/${restaurantId}/ratings`),
     );
 
-    // corrected line
+    // Commit the review and updated restaurant rating totals atomically.
     await runTransaction(db, (transaction) =>
       updateWithRating(transaction, docRef, newRatingDocument, review),
     );
@@ -83,6 +85,7 @@ export async function addReviewToRestaurant(db, restaurantId, review) {
 
 
 function applyQueryFilters(q, { category, city, price, sort }) {
+  // Add only the filters supplied in the URL or by the caller.
   if (category) {
     q = query(q, where("category", "==", category));
   }
@@ -104,6 +107,7 @@ function applyQueryFilters(q, { category, city, price, sort }) {
 export async function getRestaurants(db = db, filters = {}) {
   let q = query(collection(db, "restaurants"));
 
+  // Convert Firestore timestamps to Dates before returning data to the caller.
   q = applyQueryFilters(q, filters);
   const results = await getDocs(q);
   return results.docs.map((doc) => {
@@ -126,6 +130,7 @@ export function getRestaurantsSnapshot(cb, filters = {}) {
   let q = query(collection(db, "restaurants"));
   q = applyQueryFilters(q, filters);
 
+  // Re-run the mapping for each snapshot so consumers receive plain restaurant objects.
   return onSnapshot(q, (querySnapshot) => {
     const results = querySnapshot.docs.map((doc) => {
       return {
@@ -146,6 +151,7 @@ export async function getRestaurantById(db, restaurantId) {
     console.log("Error: Invalid ID received: ", restaurantId);
     return;
   }
+  // Fetch one restaurant and convert its timestamp to a serializable Date.
   const docRef = doc(db, "restaurants", restaurantId);
   const docSnap = await getDoc(docRef);
   return {
@@ -167,6 +173,7 @@ export function getRestaurantSnapshotById(restaurantId, cb) {
     return;
   }
 
+  // Keep the displayed restaurant synchronized with its Firestore document.
   const docRef = doc(db, "restaurants", restaurantId);
   return onSnapshot(docRef, (docSnap) => {
     cb({
@@ -183,6 +190,7 @@ export async function getReviewsByRestaurantId(db, restaurantId) {
     return;
   }
 
+  // Return reviews newest first for the restaurant detail view.
   const q = query(
     collection(db, "restaurants", restaurantId, "ratings"),
     orderBy("timestamp", "desc")
@@ -206,6 +214,7 @@ export function getReviewsSnapshotByRestaurantId(restaurantId, cb) {
     return;
   }
 
+  // Subscribe to the restaurant's reviews and preserve newest-first ordering.
   const q = query(
     collection(db, "restaurants", restaurantId, "ratings"),
     orderBy("timestamp", "desc")
@@ -226,6 +235,7 @@ export function getReviewsSnapshotByRestaurantId(restaurantId, cb) {
 // Generate sample data, then save each restaurant and its reviews to Firestore.
 export async function addFakeRestaurantsAndReviews() {
   const data = await generateFakeRestaurantsAndReviews();
+  // Create each restaurant first so its generated ratings can use the new document ID.
   for (const { restaurantData, ratingsData } of data) {
     try {
       const docRef = await addDoc(

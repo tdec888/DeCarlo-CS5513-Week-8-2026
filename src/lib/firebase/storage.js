@@ -5,6 +5,7 @@ import { storage } from "@/src/lib/firebase/clientApp";
 import { updateRestaurantImageReference } from "@/src/lib/firebase/firestore";
 
 // Replace the two functions below
+// Select the first file from the image input and update the corresponding restaurant.
 async function handleRestaurantImage(target) {
   const image = target.files ? target.files[0] : null;
   if (!image) {
@@ -17,6 +18,7 @@ async function handleRestaurantImage(target) {
 
 export async function updateRestaurantImage(restaurantId, image) {
   try {
+    // Validate inputs before creating storage paths or making network requests.
     if (!restaurantId) {
       throw new Error("No restaurant ID has been provided.");
     }
@@ -25,6 +27,7 @@ export async function updateRestaurantImage(restaurantId, image) {
       throw new Error("A valid image has not been provided.");
     }
 
+    // Persist the file, then save its download URL to the restaurant document.
     const publicImageUrl = await uploadImage(restaurantId, image);
     await updateRestaurantImageReference(restaurantId, publicImageUrl);
 
@@ -35,6 +38,7 @@ export async function updateRestaurantImage(restaurantId, image) {
 }
 
 async function uploadImage(restaurantId, image) {
+  // Keep each restaurant's image under its own storage directory.
   const filePath = `images/${restaurantId}/${image.name}`;
   const newImageRef = ref(storage, filePath);
   await uploadBytesResumable(newImageRef, image);

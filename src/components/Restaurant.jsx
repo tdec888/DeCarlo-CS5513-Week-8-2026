@@ -12,6 +12,7 @@ import { updateRestaurantImage } from "@/src/lib/firebase/storage.js";
 
 const ReviewDialog = dynamic(() => import("@/src/components/ReviewDialog.jsx"));
 
+// Client-side restaurant view: keeps live restaurant data and review form state in sync.
 export default function Restaurant({
   id,
   initialRestaurant,
@@ -21,7 +22,7 @@ export default function Restaurant({
   const [restaurantDetails, setRestaurantDetails] = useState(initialRestaurant);
   const [isOpen, setIsOpen] = useState(false);
 
-  // The only reason this component needs to know the user ID is to associate a review with the user, and to know whether to show the review dialog
+  // Prefer the live client auth state, with the server-rendered user ID as an initial fallback.
   const userId = useUser()?.uid || initialUserId;
   const [review, setReview] = useState({
     rating: 0,
@@ -29,9 +30,11 @@ export default function Restaurant({
   });
 
   const onChange = (value, name) => {
+    // Update only the edited field while retaining the rest of the current review.
     setReview({ ...review, [name]: value });
   };
 
+  // Upload a selected image and immediately reflect its returned URL in the displayed details.
   async function handleRestaurantImage(target) {
     const image = target.files ? target.files[0] : null;
     if (!image) {
@@ -43,10 +46,12 @@ export default function Restaurant({
   }
 
   const handleClose = () => {
+    // Clear the draft when closing so the next review starts empty.
     setIsOpen(false);
     setReview({ rating: 0, text: "" });
   };
 
+  // Subscribe to Firestore updates for this restaurant; return the unsubscribe callback on cleanup.
   useEffect(() => {
     return getRestaurantSnapshotById(id, (data) => {
       setRestaurantDetails(data);
