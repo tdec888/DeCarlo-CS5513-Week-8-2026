@@ -18,7 +18,7 @@ export async function GeminiSummary({ restaurantId }) {
     getFirestore(firebaseServerApp),
     restaurantId
   );
-
+/* */ 
   const reviewSeparator = "@";
   const prompt = `
     Based on the following restaurant reviews, 
