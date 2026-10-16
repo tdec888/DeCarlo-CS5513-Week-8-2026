@@ -11,7 +11,8 @@
 import { genkit } from 'genkit';
 // ❌ REMOVE the old line if it's there:
 
-import { vertexAI, gemini25Flash } from '@genkit-ai/vertexai';
+//import { vertexAI, gemini25Flash } from '@genkit-ai/vertexai';
+import { vertexAI, gemini20Flash } from '@genkit-ai/vertexai';
 
 //end updated import
 //commenting out to adjust import order: import { genkit } from "genkit";
@@ -52,16 +53,13 @@ export async function GeminiSummary({ restaurantId }) {
     // 1. REMOVED THE GEMINI_API_KEY CHECK BLOCK
     // Since we are using ADC, you do not need to look for an API key environment variable.
 
-    // 2. RECONFIGURED GENKIT INSTANCE FOR ADC
-    // Replace the googleAI() plugin with the vertexAI() plugin.
-    // It will automatically look up your server's native Application Default Credentials.
+    // Initialize the Genkit instance leveraging your secure service account permissions
     const ai = genkit({
       plugins: [vertexAI({ location: 'us-central1' })],
-      model: gemini25Flash, // Targets the enterprise-supported Vertex model
+      model: gemini20Flash, // 🛠️ Changed from gemini25Flash to gemini20Flash
     });
     
     const { text } = await ai.generate(prompt);
-
     return (
       <div className="restaurant__review_summary">
         <p>{text}</p>
