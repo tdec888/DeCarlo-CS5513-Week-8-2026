@@ -1,5 +1,21 @@
-import { gemini20Flash, googleAI } from "@genkit-ai/googleai";
-import { genkit } from "genkit";
+
+
+
+
+// commented out gemini20flash and replaced with the vertexAI and gemini25flash 
+// import { gemini20Flash, googleAI } from "@genkit-ai/googleai";
+
+
+// this is the new import replacing gemini with vertex
+
+import { genkit } from 'genkit';
+// ❌ REMOVE the old line if it's there:
+
+import { vertexAI, gemini25Flash } from '@genkit-ai/vertexai';
+
+//end updated import
+//commenting out to adjust import order: import { genkit } from "genkit";
+
 import { getReviewsByRestaurantId } from "@/src/lib/firebase/firestore.js";
 import { getAuthenticatedAppForUser } from "@/src/lib/firebase/serverApp";
 import { getFirestore } from "firebase/firestore"; 
@@ -12,13 +28,64 @@ import { getFirestore } from "firebase/firestore";
     </div>
   );
 }*/
+
+
+//THIS FUNCTION IS REPLACING THE ORIGINAL GEMINI 2.0 WITH VERTEXT AND GEMINI 2.5 FLASH---
+// an API key is not needed BUT, charges will apply.
 export async function GeminiSummary({ restaurantId }) {
   const { firebaseServerApp } = await getAuthenticatedAppForUser();
   const reviews = await getReviewsByRestaurantId(
     getFirestore(firebaseServerApp),
     restaurantId
   );
-/* */ 
+
+  const reviewSeparator = "@";
+  const prompt = `
+    Based on the following restaurant reviews, 
+    where each review is separated by a '${reviewSeparator}' character, 
+    create a one-sentence summary of what people think of the restaurant. 
+
+    Here are the reviews: ${reviews.map((review) => review.text).join(reviewSeparator)}
+  `;
+
+  try {
+    // 1. REMOVED THE GEMINI_API_KEY CHECK BLOCK
+    // Since we are using ADC, you do not need to look for an API key environment variable.
+
+    // 2. RECONFIGURED GENKIT INSTANCE FOR ADC
+    // Replace the googleAI() plugin with the vertexAI() plugin.
+    // It will automatically look up your server's native Application Default Credentials.
+    const ai = genkit({
+      plugins: [vertexAI({ location: 'us-central1' })],
+      model: gemini25Flash, // Targets the enterprise-supported Vertex model
+    });
+    
+    const { text } = await ai.generate(prompt);
+
+    return (
+      <div className="restaurant__review_summary">
+        <p>{text}</p>
+        <p>✨ Summarized with Gemini via Vertex AI</p>
+      </div>
+    );
+  } catch (e) {
+    console.error(e);
+    return <p>Error summarizing reviews.</p>;
+  }
+}
+
+
+
+
+
+/* We are commenting out the gemini20 flash which uses the API KEY-----THIS IS THE ORIGINAL AI FUNCTION BELOW
+export async function GeminiSummary({ restaurantId }) {
+  const { firebaseServerApp } = await getAuthenticatedAppForUser();
+  const reviews = await getReviewsByRestaurantId(
+    getFirestore(firebaseServerApp),
+    restaurantId
+  );
+
   const reviewSeparator = "@";
   const prompt = `
     Based on the following restaurant reviews, 
@@ -54,7 +121,7 @@ export async function GeminiSummary({ restaurantId }) {
     console.error(e);
     return <p>Error summarizing reviews.</p>;
   }
-}
+} end summary using gemini2.0flash */
 
 // Shown while the summary section is waiting to render.
 export function GeminiSummarySkeleton() {
