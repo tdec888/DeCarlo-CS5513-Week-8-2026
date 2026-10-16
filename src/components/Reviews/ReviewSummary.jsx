@@ -56,7 +56,7 @@ export async function GeminiSummary({ restaurantId }) {
     // Initialize the Genkit instance leveraging your secure service account permissions
     const ai = genkit({
       plugins: [vertexAI({ location: 'us-central1' })],
-      model: gemini20Flash, // 🛠️ Changed from gemini25Flash to gemini20Flash
+      model: 'vertexai/gemini-2.5-flash', // Direct explicit override fix
     });
     
     const { text } = await ai.generate(prompt);
